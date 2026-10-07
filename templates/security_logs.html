@@ -1,0 +1,1080 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Security Audit Logs - Secure Media Vault</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+            margin: 0;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #f4f7fb;
+
+            color: #212529;
+        }
+
+
+        /* ==============================
+           HEADER
+        ============================== */
+
+        .header {
+
+            background: #111827;
+
+            color: white;
+
+            padding: 20px 40px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            box-shadow:
+                0 2px 10px rgba(0, 0, 0, 0.15);
+        }
+
+
+        .brand h1 {
+
+            margin: 0;
+
+            font-size: 24px;
+        }
+
+
+        .brand p {
+
+            margin: 5px 0 0;
+
+            font-size: 13px;
+
+            color: #9ca3af;
+        }
+
+
+        .header-actions {
+
+            display: flex;
+
+            gap: 10px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .header-actions a {
+
+            text-decoration: none;
+
+            color: white;
+
+            padding: 10px 15px;
+
+            border-radius: 7px;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            background: #374151;
+        }
+
+
+        .header-actions a:hover {
+
+            background: #4b5563;
+        }
+
+
+        /* ==============================
+           MAIN CONTAINER
+        ============================== */
+
+        .container {
+
+            max-width: 1300px;
+
+            margin: 40px auto;
+
+            padding: 0 20px;
+        }
+
+
+        .page-title {
+
+            margin-bottom: 25px;
+        }
+
+
+        .page-title h2 {
+
+            margin: 0;
+
+            font-size: 28px;
+        }
+
+
+        .page-title p {
+
+            margin-top: 8px;
+
+            color: #6b7280;
+        }
+
+
+        /* ==============================
+           SECURITY STATUS
+        ============================== */
+
+        .security-banner {
+
+            background: #ecfdf5;
+
+            border: 1px solid #a7f3d0;
+
+            border-radius: 10px;
+
+            padding: 15px 20px;
+
+            margin-bottom: 25px;
+
+            color: #065f46;
+
+            font-weight: 600;
+        }
+
+
+        /* ==============================
+           TABLE CARD
+        ============================== */
+
+        .table-card {
+
+            background: white;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 4px 15px rgba(0, 0, 0, 0.08);
+
+            overflow: hidden;
+        }
+
+
+        .table-header {
+
+            padding: 20px 25px;
+
+            border-bottom: 1px solid #e5e7eb;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 15px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .table-header h3 {
+
+            margin: 0;
+
+            font-size: 18px;
+        }
+
+
+        .log-count {
+
+            background: #eef2ff;
+
+            color: #3730a3;
+
+            padding: 7px 12px;
+
+            border-radius: 20px;
+
+            font-size: 13px;
+
+            font-weight: 600;
+        }
+
+
+        /* ==============================
+           LOG FILTERS
+        ============================== */
+
+        .log-filters {
+
+            padding: 18px 25px;
+
+            background: #f9fafb;
+
+            border-bottom: 1px solid #e5e7eb;
+
+            display: flex;
+
+            gap: 10px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .log-filters input,
+        .log-filters select {
+
+            padding: 10px 12px;
+
+            border: 1px solid #d1d5db;
+
+            border-radius: 7px;
+
+            background: white;
+
+            font-size: 14px;
+
+            outline: none;
+        }
+
+
+        .log-filters input {
+
+            min-width: 260px;
+
+            flex: 1;
+        }
+
+
+        .log-filters input:focus,
+        .log-filters select:focus {
+
+            border-color: #6366f1;
+
+            box-shadow:
+                0 0 0 2px rgba(99, 102, 241, 0.1);
+        }
+
+
+        .log-filters button {
+
+            border: none;
+
+            padding: 10px 16px;
+
+            border-radius: 7px;
+
+            background: #374151;
+
+            color: white;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+        }
+
+
+        .log-filters button:hover {
+
+            background: #4b5563;
+        }
+
+
+        .no-results {
+
+            display: none;
+
+            text-align: center;
+
+            padding: 40px;
+
+            color: #6b7280;
+
+            font-size: 14px;
+        }
+
+
+        /* ==============================
+           TABLE
+        ============================== */
+
+        .table-wrapper {
+
+            overflow-x: auto;
+        }
+
+
+        table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 900px;
+        }
+
+
+        th {
+
+            background: #f9fafb;
+
+            color: #4b5563;
+
+            font-size: 13px;
+
+            text-align: left;
+
+            padding: 15px;
+
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+
+        td {
+
+            padding: 15px;
+
+            font-size: 13px;
+
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+
+        tr:hover {
+
+            background: #f9fafb;
+        }
+
+
+        /* ==============================
+           BADGES
+        ============================== */
+
+        .status-success {
+
+            display: inline-block;
+
+            padding: 5px 10px;
+
+            border-radius: 20px;
+
+            background: #dcfce7;
+
+            color: #166534;
+
+            font-size: 12px;
+
+            font-weight: 700;
+        }
+
+
+        .status-failed {
+
+            display: inline-block;
+
+            padding: 5px 10px;
+
+            border-radius: 20px;
+
+            background: #fee2e2;
+
+            color: #991b1b;
+
+            font-size: 12px;
+
+            font-weight: 700;
+        }
+
+
+        .action {
+
+            font-weight: 700;
+
+            color: #374151;
+        }
+
+
+        .ip {
+
+            font-family: monospace;
+
+            color: #4b5563;
+        }
+
+
+        .empty {
+
+            text-align: center;
+
+            padding: 50px;
+
+            color: #6b7280;
+        }
+
+
+        /* ==============================
+           FOOTER
+        ============================== */
+
+        footer {
+
+            text-align: center;
+
+            padding: 30px;
+
+            color: #6b7280;
+
+            font-size: 13px;
+        }
+
+
+        /* ==============================
+           MOBILE
+        ============================== */
+
+        @media (max-width: 768px) {
+
+            .header {
+
+                padding: 20px;
+
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 15px;
+            }
+
+
+            .header-actions {
+
+                width: 100%;
+            }
+
+
+            .container {
+
+                margin: 25px auto;
+            }
+
+
+            .log-filters {
+
+                flex-direction: column;
+            }
+
+
+            .log-filters input {
+
+                min-width: 100%;
+            }
+
+
+            .log-filters select,
+            .log-filters button {
+
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ==============================
+     HEADER
+============================== -->
+
+<header class="header">
+
+    <div class="brand">
+
+        <h1>🔐 Secure Media Vault</h1>
+
+        <p>Security Audit & Monitoring</p>
+
+    </div>
+
+
+    <div class="header-actions">
+
+        <a href="{{ url_for('home') }}">
+            🏠 Dashboard
+        </a>
+
+        <a href="{{ url_for('history') }}">
+            📊 History
+        </a>
+
+        <a href="{{ url_for('logout') }}">
+            🚪 Logout
+        </a>
+
+    </div>
+
+</header>
+
+
+<!-- ==============================
+     MAIN CONTENT
+============================== -->
+
+<div class="container">
+
+
+    <div class="page-title">
+
+        <h2>🛡 Security Audit Logs</h2>
+
+        <p>
+            Monitor authentication and security-related activities.
+        </p>
+
+    </div>
+
+
+    <div class="security-stats">
+
+    <div class="security-card">
+        <div class="security-icon">🛡️</div>
+        <div>
+            <h3>{{ total_events }}</h3>
+            <p>Total Events</p>
+        </div>
+    </div>
+
+
+    <div class="security-card">
+        <div class="security-icon">✅</div>
+        <div>
+            <h3>{{ successful_events }}</h3>
+            <p>Successful</p>
+        </div>
+    </div>
+
+
+    <div class="security-card">
+        <div class="security-icon">🚨</div>
+        <div>
+            <h3>{{ failed_events }}</h3>
+            <p>Failed Events</p>
+        </div>
+    </div>
+
+
+    <div class="security-card">
+        <div class="security-icon">🔑</div>
+        <div>
+            <h3>{{ authentication_events }}</h3>
+            <p>Authentication</p>
+        </div>
+    </div>
+
+</div>
+
+
+    <!-- SECURITY STATUS -->
+
+    <div class="security-banner">
+
+        🟢 Security Monitoring Active —
+        All recorded security events are stored in the local audit database.
+
+    </div>
+
+
+    <!-- LOG TABLE -->
+
+    <div class="table-card">
+
+
+        <div class="table-header">
+
+            <h3>Recent Security Events</h3>
+
+            <span class="log-count">
+
+                {{ logs|length }} Events
+
+            </span>
+
+        </div>
+
+
+        <!-- ==============================
+             FILTERS
+        ============================== -->
+
+        {% if logs %}
+
+        <div class="log-filters">
+
+            <input
+                type="text"
+                id="logSearch"
+                placeholder="🔍 Search username or IP address..."
+                onkeyup="filterLogs()"
+            >
+
+
+            <select
+                id="statusFilter"
+                onchange="filterLogs()"
+            >
+
+                <option value="">
+                    All Status
+                </option>
+
+                <option value="SUCCESS">
+                    Success
+                </option>
+
+                <option value="FAILED">
+                    Failed
+                </option>
+
+            </select>
+
+
+            <select
+                id="actionFilter"
+                onchange="filterLogs()"
+            >
+
+                <option value="">
+                    All Actions
+                </option>
+
+                <option value="LOGIN">
+                    Login
+                </option>
+
+                <option value="LOGOUT">
+                    Logout
+                </option>
+
+                <option value="PASSWORD">
+                    Password Change
+                </option>
+
+                <option value="ENCRYPT">
+                    Encryption
+                </option>
+
+                <option value="DECRYPT">
+                    Decryption
+                </option>
+
+            </select>
+
+
+            <button onclick="resetFilters()">
+
+                🔄 Reset
+
+            </button>
+
+        </div>
+
+        {% endif %}
+
+
+        <div class="table-wrapper">
+
+
+            {% if logs %}
+
+
+            <table id="securityLogsTable">
+
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Username</th>
+
+                        <th>Action</th>
+
+                        <th>Status</th>
+
+                        <th>IP Address</th>
+
+                        <th>Timestamp</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                    {% for log in logs %}
+
+
+                    <tr>
+
+
+                        <td>
+                            {{ log[0] }}
+                        </td>
+
+
+                        <td>
+                            👤 {{ log[1] }}
+                        </td>
+
+
+                        <td class="action">
+
+
+                            {% if log[2] == "LOGIN_SUCCESS" %}
+
+                                🔓 LOGIN SUCCESS
+
+
+                            {% elif log[2] == "LOGIN_FAILED" %}
+
+                                🚨 LOGIN FAILED
+
+
+                            {% elif log[2] == "LOGOUT" %}
+
+                                🚪 LOGOUT
+
+
+                            {% elif log[2] == "PASSWORD_CHANGED" %}
+
+                                🔑 PASSWORD CHANGED
+
+
+                            {% elif log[2] == "ENCRYPT_SUCCESS" %}
+
+                                🔐 ENCRYPT SUCCESS
+
+
+                            {% elif log[2] == "ENCRYPT_FAILED" %}
+
+                                ⚠️ ENCRYPT FAILED
+
+
+                            {% elif log[2] == "DECRYPT_SUCCESS" %}
+
+                                🔓 DECRYPT SUCCESS
+
+
+                            {% elif log[2] == "DECRYPT_FAILED" %}
+
+                                ⚠️ DECRYPT FAILED
+
+
+                            {% else %}
+
+                                {{ log[2] }}
+
+                            {% endif %}
+
+
+                        </td>
+
+
+                        <td>
+
+
+                            {% if log[3] == "SUCCESS" %}
+
+                                <span class="status-success">
+
+                                    ✓ SUCCESS
+
+                                </span>
+
+
+                            {% else %}
+
+                                <span class="status-failed">
+
+                                    ✕ FAILED
+
+                                </span>
+
+                            {% endif %}
+
+
+                        </td>
+
+
+                        <td class="ip">
+
+                            {{ log[4] or "N/A" }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ log[5] }}
+
+                        </td>
+
+
+                    </tr>
+
+
+                    {% endfor %}
+
+
+                </tbody>
+
+
+            </table>
+
+
+            <!-- NO SEARCH RESULTS -->
+
+            <div
+                id="noResults"
+                class="no-results"
+            >
+
+                <h3>🔍 No Matching Events</h3>
+
+                <p>
+                    No security events match your current filters.
+                </p>
+
+            </div>
+
+
+            {% else %}
+
+
+                <div class="empty">
+
+                    <h3>No security events yet</h3>
+
+                    <p>
+
+                        Security events will appear here when users
+                        perform authenticated actions.
+
+                    </p>
+
+                </div>
+
+
+            {% endif %}
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+<!-- ==============================
+     FOOTER
+============================== -->
+
+<footer>
+
+    Secure Media Vault © 2026 |
+
+    AES-256-GCM |
+
+    PBKDF2-HMAC-SHA256 |
+
+    Security Audit Logging
+
+</footer>
+
+
+<!-- ==============================
+     FILTER JAVASCRIPT
+============================== -->
+
+<script>
+
+
+function filterLogs() {
+
+    const search =
+        document
+            .getElementById("logSearch")
+            .value
+            .toLowerCase()
+            .trim();
+
+
+    const status =
+        document
+            .getElementById("statusFilter")
+            .value
+            .toLowerCase();
+
+
+    const action =
+        document
+            .getElementById("actionFilter")
+            .value
+            .toLowerCase();
+
+
+    const rows =
+        document.querySelectorAll(
+            "#securityLogsTable tbody tr"
+        );
+
+
+    let visibleRows = 0;
+
+
+    rows.forEach(row => {
+
+
+        const username =
+            row.cells[1]
+                ?.textContent
+                .toLowerCase();
+
+
+        const eventAction =
+            row.cells[2]
+                ?.textContent
+                .toLowerCase();
+
+
+        const eventStatus =
+            row.cells[3]
+                ?.textContent
+                .toLowerCase();
+
+
+        const ip =
+            row.cells[4]
+                ?.textContent
+                .toLowerCase();
+
+
+        const matchesSearch =
+
+            username.includes(search) ||
+
+            ip.includes(search);
+
+
+        const matchesStatus =
+
+            !status ||
+
+            eventStatus.includes(status);
+
+
+        const matchesAction =
+
+            !action ||
+
+            eventAction.includes(action);
+
+
+        if (
+            matchesSearch &&
+            matchesStatus &&
+            matchesAction
+        ) {
+
+            row.style.display = "";
+
+            visibleRows++;
+
+        }
+
+        else {
+
+            row.style.display = "none";
+
+        }
+
+    });
+
+
+    const noResults =
+        document.getElementById("noResults");
+
+
+    if (noResults) {
+
+        if (visibleRows === 0) {
+
+            noResults.style.display = "block";
+
+        }
+
+        else {
+
+            noResults.style.display = "none";
+
+        }
+
+    }
+
+}
+
+
+function resetFilters() {
+
+    document.getElementById("logSearch").value = "";
+
+    document.getElementById("statusFilter").value = "";
+
+    document.getElementById("actionFilter").value = "";
+
+    filterLogs();
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>
+

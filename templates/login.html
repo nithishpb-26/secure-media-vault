@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Login - Secure Media Vault</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="login-page">
+
+    <div class="login-card">
+
+        <!-- LOGO -->
+
+        <div class="login-logo">
+
+            <div class="login-shield">
+                🛡️
+            </div>
+
+            <h1>Secure Media Vault</h1>
+
+            <p>Protected Media Encryption System</p>
+
+        </div>
+
+
+        <!-- LOGIN TITLE -->
+
+        <div class="login-heading">
+
+            <h2>Welcome Back</h2>
+
+            <p>
+                Sign in to access your secure vault
+            </p>
+
+        </div>
+
+
+        <!-- ERROR MESSAGE -->
+
+        {% if error %}
+
+        <div class="login-error">
+            ⚠️ {{ error }}
+        </div>
+
+        {% endif %}
+
+
+        <!-- LOGIN FORM -->
+
+        <form method="POST"
+              action="/login"
+              class="login-form">
+
+
+            <div class="login-field">
+
+                <label for="username">
+                    Username
+                </label>
+
+                <div class="login-input">
+
+                    <span>👤</span>
+
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="Enter username"
+                        required
+                        autocomplete="username">
+
+                </div>
+
+            </div>
+
+
+            <div class="login-field">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <div class="login-input">
+
+                    <span>🔑</span>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter password"
+                        required
+                        autocomplete="current-password">
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="login-button">
+
+                🔐 Secure Login
+
+            </button>
+
+        </form>
+
+
+        <!-- SECURITY INFORMATION -->
+
+        <div class="login-security">
+
+            <div class="login-security-item">
+                <span>✓</span>
+                PBKDF2 Password Protection
+            </div>
+
+            <div class="login-security-item">
+                <span>✓</span>
+                Secure Session Authentication
+            </div>
+
+            <div class="login-security-item">
+                <span>✓</span>
+                Protected Media Vault
+            </div>
+
+        </div>
+
+
+        <div class="login-footer">
+
+            AES-256-GCM • PBKDF2 • SHA-256
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

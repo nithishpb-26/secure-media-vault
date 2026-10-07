@@ -1,0 +1,565 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Security Dashboard - Secure Media Vault</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <!-- ============================= -->
+    <!-- HEADER -->
+    <!-- ============================= -->
+
+    <header class="header">
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                🛡️
+            </div>
+
+            <div class="logo-text">
+
+                <h1>Secure Media Vault</h1>
+
+                <span>Security Monitoring Dashboard</span>
+
+            </div>
+
+        </div>
+
+
+        <div class="header-right">
+
+            <div class="status">
+
+                <span class="status-dot"></span>
+
+                SYSTEM SECURE
+
+            </div>
+
+
+            <div class="user-info">
+
+                👤 {{ session.get("username", "User") }}
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- ============================= -->
+    <!-- SECURITY BANNER -->
+    <!-- ============================= -->
+
+    <section class="security-banner">
+
+        <div class="security-icon">
+            🛡️
+        </div>
+
+        <div>
+
+            <h2>Security Operations Center</h2>
+
+            <p>
+                Monitor encryption activity, authentication events,
+                and security operations in real time.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ============================= -->
+    <!-- PAGE HEADING -->
+    <!-- ============================= -->
+
+    <div class="page-heading">
+
+        <div>
+
+            <h2>Security Dashboard</h2>
+
+            <p>
+                System activity and security statistics
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ============================= -->
+    <!-- STATISTICS -->
+    <!-- ============================= -->
+
+    <section class="stats-grid">
+
+
+        <!-- TOTAL OPERATIONS -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                📊
+            </div>
+
+            <div class="stat-content">
+
+                <span class="stat-label">
+                    TOTAL OPERATIONS
+                </span>
+
+                <h3>
+                    {{ statistics.total }}
+                </h3>
+
+            </div>
+
+        </div>
+
+
+        <!-- SUCCESSFUL -->
+
+        <div class="stat-card success-card">
+
+            <div class="stat-icon">
+                ✅
+            </div>
+
+            <div class="stat-content">
+
+                <span class="stat-label">
+                    SUCCESSFUL
+                </span>
+
+                <h3>
+                    {{ statistics.successful }}
+                </h3>
+
+            </div>
+
+        </div>
+
+
+        <!-- FAILED -->
+
+        <div class="stat-card danger-card">
+
+            <div class="stat-icon">
+                ⚠️
+            </div>
+
+            <div class="stat-content">
+
+                <span class="stat-label">
+                    FAILED
+                </span>
+
+                <h3>
+                    {{ statistics.failed }}
+                </h3>
+
+            </div>
+
+        </div>
+
+
+        <!-- ENCRYPTIONS -->
+
+        <div class="stat-card encrypt-stat">
+
+            <div class="stat-icon">
+                🔐
+            </div>
+
+            <div class="stat-content">
+
+                <span class="stat-label">
+                    ENCRYPTIONS
+                </span>
+
+                <h3>
+                    {{ statistics.encryptions }}
+                </h3>
+
+            </div>
+
+        </div>
+
+
+        <!-- DECRYPTIONS -->
+
+        <div class="stat-card decrypt-stat">
+
+            <div class="stat-icon">
+                🔓
+            </div>
+
+            <div class="stat-content">
+
+                <span class="stat-label">
+                    DECRYPTIONS
+                </span>
+
+                <h3>
+                    {{ statistics.decryptions }}
+                </h3>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- ============================= -->
+    <!-- SECURITY SUMMARY -->
+    <!-- ============================= -->
+
+    <section class="card">
+
+        <div class="card-header">
+
+            <div class="card-icon">
+                🛡️
+            </div>
+
+            <div>
+
+                <h2>Security Status</h2>
+
+                <p>
+                    Current protection status of the system
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="security-stats">
+
+            <div class="security-card">
+
+                <div class="security-icon">
+                    🔐
+                </div>
+
+                <h3>AES-256-GCM</h3>
+
+                <p>
+                    Authenticated encryption enabled
+                </p>
+
+            </div>
+
+
+            <div class="security-card">
+
+                <div class="security-icon">
+                    🔑
+                </div>
+
+                <h3>PBKDF2-HMAC-SHA256</h3>
+
+                <p>
+                    Password-based key derivation enabled
+                </p>
+
+            </div>
+
+
+            <div class="security-card">
+
+                <div class="security-icon">
+                    #️⃣
+                </div>
+
+                <h3>SHA-256</h3>
+
+                <p>
+                    File integrity verification enabled
+                </p>
+
+            </div>
+
+
+            <div class="security-card">
+
+                <div class="security-icon">
+                    📋
+                </div>
+
+                <h3>Audit Logging</h3>
+
+                <p>
+                    Security events are recorded
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ============================= -->
+    <!-- RECENT SECURITY ACTIVITY -->
+    <!-- ============================= -->
+
+    <section class="activity-section">
+
+        <div class="section-header">
+
+            <div>
+
+                <h2>Recent Security Activity</h2>
+
+                <p>
+                    Latest authentication and file-security events
+                </p>
+
+            </div>
+
+            <div class="activity-count">
+
+                {{ logs|length }} recent events
+
+            </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table class="history-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>USERNAME</th>
+
+                        <th>ACTION</th>
+
+                        <th>STATUS</th>
+
+                        <th>IP ADDRESS</th>
+
+                        <th>TIMESTAMP</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                {% if logs %}
+
+                    {% for log in logs %}
+
+                    <tr>
+
+                        <td>
+
+                            <span class="record-id">
+                                #{{ log[0] }}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            {{ log[1] }}
+
+                        </td>
+
+
+                        <td>
+
+                            <strong>
+                                {{ log[2] }}
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+
+                            {% if log[3] == "SUCCESS" %}
+
+                                <span class="status-badge success">
+                                    ✓ SUCCESS
+                                </span>
+
+                            {% else %}
+
+                                <span class="status-badge failed">
+                                    ✕ FAILED
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ log[4] or "N/A" }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ log[5] }}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <tr>
+
+                        <td colspan="6">
+
+                            <div class="empty-state">
+
+                                <div class="empty-icon">
+                                    🛡️
+                                </div>
+
+                                <h3>
+                                    No Security Events
+                                </h3>
+
+                                <p>
+                                    Security activity will appear here.
+                                </p>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                {% endif %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    <!-- ============================= -->
+    <!-- NAVIGATION -->
+    <!-- ============================= -->
+
+    <div class="change-password-navigation">
+
+        <a href="{{ url_for('home') }}"
+           class="history-button">
+
+            🏠 Dashboard
+
+        </a>
+
+
+        <a href="{{ url_for('history') }}"
+           class="history-button">
+
+            📊 Encryption History
+
+        </a>
+
+
+        <a href="{{ url_for('security_logs') }}"
+           class="history-button">
+
+            🛡️ Security Logs
+
+        </a>
+
+
+        <a href="{{ url_for('change_password_page') }}"
+           class="history-button">
+
+            🔑 Change Password
+
+        </a>
+
+
+        <a href="{{ url_for('logout') }}"
+           class="logout-button">
+
+            🚪 Logout
+
+        </a>
+
+    </div>
+
+
+    <!-- ============================= -->
+    <!-- FOOTER -->
+    <!-- ============================= -->
+
+    <footer>
+
+        <div class="footer-logo">
+
+            🛡️ Secure Media Vault
+
+        </div>
+
+        <div class="footer-tech">
+
+            AES-256-GCM
+            •
+            PBKDF2
+            •
+            SHA-256
+            •
+            Secure Audit Logging
+
+        </div>
+
+    </footer>
+
+
+</div>
+
+</body>
+
+</html>

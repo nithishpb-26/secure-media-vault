@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Security Dashboard - Secure Media Vault</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <header class="header">
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                🛡️
+            </div>
+
+            <div class="logo-text">
+                <h1>Secure Media Vault</h1>
+                <p>Encryption Activity Dashboard</p>
+            </div>
+
+        </div>
+
+        <div class="header-right">
+
+            <div class="status">
+                <span class="status-dot"></span>
+                System Secure
+            </div>
+
+            <a href="/" class="history-button">
+                🏠 Dashboard
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- PAGE TITLE -->
+    <section class="page-heading">
+
+        <div>
+            <h2>Security Dashboard</h2>
+
+            <p>
+                Monitor encryption, decryption and file integrity activity.
+            </p>
+        </div>
+
+    </section>
+
+
+    <!-- STATISTICS -->
+    <section class="stats-grid">
+
+        <div class="stat-card">
+            <div class="stat-icon">📊</div>
+
+            <div class="stat-content">
+                <span class="stat-label">Total Operations</span>
+                <strong>{{ statistics.total }}</strong>
+            </div>
+        </div>
+
+
+        <div class="stat-card success-card">
+            <div class="stat-icon">✓</div>
+
+            <div class="stat-content">
+                <span class="stat-label">Successful</span>
+                <strong>{{ statistics.successful }}</strong>
+            </div>
+        </div>
+
+
+        <div class="stat-card danger-card">
+            <div class="stat-icon">!</div>
+
+            <div class="stat-content">
+                <span class="stat-label">Failed</span>
+                <strong>{{ statistics.failed }}</strong>
+            </div>
+        </div>
+
+
+        <div class="stat-card encrypt-stat">
+            <div class="stat-icon">🔐</div>
+
+            <div class="stat-content">
+                <span class="stat-label">Encryptions</span>
+                <strong>{{ statistics.encryptions }}</strong>
+            </div>
+        </div>
+
+
+        <div class="stat-card decrypt-stat">
+            <div class="stat-icon">🔓</div>
+
+            <div class="stat-content">
+                <span class="stat-label">Decryptions</span>
+                <strong>{{ statistics.decryptions }}</strong>
+            </div>
+        </div>
+
+    </section>
+
+
+    <!-- SECURITY STATUS -->
+    <section class="security-banner">
+
+        <div class="security-icon">
+            🔒
+        </div>
+
+        <div>
+            <h3>Security Engine Active</h3>
+
+            <p>
+                Files are protected using AES-256-GCM authenticated encryption,
+                PBKDF2-HMAC-SHA256 key derivation and SHA-256 file fingerprinting.
+            </p>
+        </div>
+
+    </section>
+
+
+    <!-- ACTIVITY SECTION -->
+    <section class="activity-section">
+
+        <div class="section-header">
+
+            <div>
+                <h2>Recent Activity</h2>
+
+                <p>
+                    Complete history of media encryption and decryption operations.
+                </p>
+            </div>
+
+            <div class="activity-count">
+                {{ statistics.total }} Records
+            </div>
+
+            <select id="operationFilter" class="history-filter">
+            <option value="ALL">All Operations</option>
+            <option value="ENCRYPT">Encrypt</option>
+            <option value="DECRYPT">Decrypt</option>
+        </select>
+
+        <select id="statusFilter" class="history-filter">
+            <option value="ALL">All Status</option>
+            <option value="SUCCESS">Success</option>
+            <option value="FAILED">Failed</option>
+        </select>
+
+        </div>
+
+
+        <div class="history-controls">
+
+            <div class="search-box">
+                <span>🔎</span>
+
+                <input
+                type="text"
+                id="historySearch"
+                placeholder="Search filename..."
+                autocomplete="off">
+            </div>
+
+            <button
+                type="button"
+                class="reset-button"
+                onclick="resetHistoryFilters()">
+                ↻ Reset
+            </button>
+
+        </div>
+
+
+        <!-- TABLE -->
+        <div class="table-wrapper">
+
+            {% if records %}
+
+            <table class="history-table">
+
+                <thead>
+
+                    <tr>
+                        <th>ID</th>
+                        <th>File</th>
+                        <th>Operation</th>
+                        <th>Status</th>
+                        <th>Size</th>
+                        <th>SHA-256</th>
+                        <th>Date & Time</th>
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                {% for record in records %}
+
+                    <tr
+                        data-filename="{{ record[1]|lower }}"
+                        data-operation="{{ record[2] }}"
+                        data-status="{{ record[3] }}" >
+
+
+                        <td>
+                            <span class="record-id">
+                                #{{ record[0] }}
+                            </span>
+                        </td>
+
+
+                        <td>
+
+                            <div class="file-info">
+
+                                <div class="file-icon">
+                                    📁
+                                </div>
+
+                                <div class="file-name">
+                                    {{ record[1] }}
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            {% if record[2] == "ENCRYPT" %}
+
+                                <span class="operation encrypt-operation">
+                                    🔐 ENCRYPT
+                                </span>
+
+                            {% else %}
+
+                                <span class="operation decrypt-operation">
+                                    🔓 DECRYPT
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            {% if record[3] == "SUCCESS" %}
+
+                                <span class="status-badge success-badge">
+                                    ● SUCCESS
+                                </span>
+
+                            {% else %}
+
+                                <span class="status-badge failed-badge">
+                                    ● FAILED
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="file-size">
+                                {% if record[4] %}
+                                    {{ "%.2f"|format(record[4] / 1024) }} KB
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            {% if record[5] %}
+
+                                <span class="hash-value"
+                                      title="{{ record[5] }}">
+                                    {{ record[5][:16] }}...
+                                </span>
+
+                            {% else %}
+
+                                <span class="no-data">
+                                    —
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="timestamp">
+                                {{ record[6] }}
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    📂
+                </div>
+
+                <h3>No Activity Yet</h3>
+
+                <p>
+                    Your encryption and decryption activity will appear here.
+                </p>
+
+                <a href="/" class="start-button">
+                    Start Encrypting
+                </a>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+    <!-- SECURITY TECHNOLOGIES -->
+    <section class="technology-section">
+
+        <div class="section-heading">
+
+            <h2>Security Technologies</h2>
+
+            <p>
+                Cryptographic technologies used by Secure Media Vault.
+            </p>
+
+        </div>
+
+
+        <div class="technology-grid">
+
+            <div class="technology-card">
+
+                <div class="technology-icon">
+                    🔐
+                </div>
+
+                <h3>AES-256-GCM</h3>
+
+                <p>
+                    Authenticated symmetric encryption providing confidentiality
+                    and tamper detection.
+                </p>
+
+            </div>
+
+
+            <div class="technology-card">
+
+                <div class="technology-icon">
+                    🔑
+                </div>
+
+                <h3>PBKDF2</h3>
+
+                <p>
+                    Password-based key derivation with a strong computational
+                    work factor.
+                </p>
+
+            </div>
+
+
+            <div class="technology-card">
+
+                <div class="technology-icon">
+                    🧬
+                </div>
+
+                <h3>SHA-256</h3>
+
+                <p>
+                    Cryptographic fingerprint used for file integrity verification
+                    and auditing.
+                </p>
+
+            </div>
+
+
+            <div class="technology-card">
+
+                <div class="technology-icon">
+                    🛡️
+                </div>
+
+                <h3>Tamper Detection</h3>
+
+                <p>
+                    AES-GCM authentication detects modified or corrupted encrypted
+                    media files.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+
+        <div>
+            <strong>Secure Media Vault</strong>
+            <span> • Secure Image & Video Encryption System</span>
+        </div>
+
+        <div>
+            AES-256-GCM • PBKDF2 • SHA-256
+        </div>
+
+    </footer>
+
+</div>
+
+<script>
+
+const searchInput = document.getElementById("historySearch");
+const operationFilter = document.getElementById("operationFilter");
+const statusFilter = document.getElementById("statusFilter");
+
+
+function filterHistory() {
+
+    const searchValue =
+        searchInput.value.toLowerCase().trim();
+
+    const operationValue =
+        operationFilter.value;
+
+    const statusValue =
+        statusFilter.value;
+
+    const rows =
+        document.querySelectorAll(".history-table tbody tr");
+
+
+    rows.forEach(function(row) {
+
+        const filename =
+            row.dataset.filename || "";
+
+        const operation =
+            row.dataset.operation || "";
+
+        const status =
+            row.dataset.status || "";
+
+
+        const matchesSearch =
+            filename.includes(searchValue);
+
+        const matchesOperation =
+            operationValue === "ALL" ||
+            operation === operationValue;
+
+        const matchesStatus =
+            statusValue === "ALL" ||
+            status === statusValue;
+
+
+        if (
+            matchesSearch &&
+            matchesOperation &&
+            matchesStatus
+        ) {
+
+            row.style.display = "";
+
+        } else {
+
+            row.style.display = "none";
+
+        }
+
+    });
+
+}
+
+
+function resetHistoryFilters() {
+
+    searchInput.value = "";
+
+    operationFilter.value = "ALL";
+
+    statusFilter.value = "ALL";
+
+    filterHistory();
+
+}
+
+
+searchInput.addEventListener(
+    "input",
+    filterHistory
+);
+
+operationFilter.addEventListener(
+    "change",
+    filterHistory
+);
+
+statusFilter.addEventListener(
+    "change",
+    filterHistory
+);
+
+</script>
+
+
+</body>
+</html>

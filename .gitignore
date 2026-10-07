@@ -1,0 +1,8 @@
+.env
+venv/
+__pycache__/
+*.pyc
+database/encryption.db
+uploads/
+encrypted/
+decrypted/

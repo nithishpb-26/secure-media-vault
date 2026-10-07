@@ -1,0 +1,576 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Secure Media Vault</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+    <!-- HEADER -->
+    <header class="header">
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                🛡️
+            </div>
+
+            <div class="logo-text">
+
+                <h1>
+                    Secure Media Vault
+                </h1>
+
+                <p>
+                    Secure Image &amp; Video Encryption System
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="header-right">
+
+
+            <div class="status">
+
+                <span class="status-dot"></span>
+
+                System Secure
+
+            </div>
+
+
+            <!-- LOGGED-IN USER -->
+            <div class="user-info">
+
+                👤 {{ session.get("username", "User") }}
+
+            </div>
+
+
+            <!-- HISTORY -->
+            <a href="{{ url_for('history') }}"
+               class="history-button">
+
+                📊 History
+
+            </a>
+
+            <a href="{{ url_for('security_dashboard') }}" class="history-button">
+                🛡️ Security Dashboard
+            </a>
+
+            <a href="{{ url_for('security_logs') }}" class="history-button">
+                🛡️ Security Logs
+            </a>
+
+            <a href="{{ url_for('change_password_page') }}"
+                class="history-button">
+
+                🔑 Change Password
+
+            </a>
+
+
+            <!-- LOGOUT -->
+            <a href="{{ url_for('logout') }}"
+               class="logout-button">
+
+                🚪 Logout
+
+            </a>
+
+
+        </div>
+
+    </header>
+
+
+
+    <!-- SECURITY BANNER -->
+    <section class="security-banner">
+
+        <div class="security-icon">
+            🛡️
+        </div>
+
+        <div>
+
+            <h3>
+                Your files are protected
+            </h3>
+
+            <p>
+                AES-256-GCM encryption, PBKDF2 key derivation
+                and authenticated file protection keep your
+                media secure.
+            </p>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- MAIN ENCRYPTION AREA -->
+    <section class="main-grid">
+
+
+        <!-- ENCRYPT CARD -->
+        <div class="card encrypt-card">
+
+
+            <div class="card-header">
+
+                <div class="card-icon encrypt-icon">
+                    🔒
+                </div>
+
+                <div>
+
+                    <h2>
+                        Encrypt File
+                    </h2>
+
+                    <p>
+                        Protect your image or video
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <form action="/encrypt"
+                  method="POST"
+                  enctype="multipart/form-data">
+
+
+                <label for="encrypt-file">
+                    Select Media
+                </label>
+
+
+                <div class="upload-box">
+
+                    <div class="upload-icon">
+                        📁
+                    </div>
+
+                    <h3>
+                        Choose an image or video
+                    </h3>
+
+                    <p>
+                        Click the button below to select your file
+                    </p>
+
+
+                    <input id="encrypt-file"
+                           type="file"
+                           name="file"
+                           accept="image/*,video/*"
+                           required>
+
+
+                    <small>
+                        JPG • PNG • GIF • BMP • MP4 • AVI • MOV • MKV • WEBM
+                    </small>
+
+                </div>
+
+
+
+                <label for="encrypt-password">
+                    Encryption Password
+                </label>
+
+
+                <input id="encrypt-password"
+                       type="password"
+                       name="password"
+                       placeholder="Enter strong password"
+                       required>
+
+
+                <div class="password-info">
+
+                    🔑 Minimum 8 characters • Uppercase • Lowercase • Number • Symbol
+
+                </div>
+
+
+                <button type="submit"
+                        class="action-button encrypt-button">
+
+                    🔒 Encrypt File
+
+                </button>
+
+
+            </form>
+
+        </div>
+
+
+
+        <!-- DECRYPT CARD -->
+        <div class="card decrypt-card">
+
+
+            <div class="card-header">
+
+                <div class="card-icon decrypt-icon">
+                    🔓
+                </div>
+
+                <div>
+
+                    <h2>
+                        Decrypt File
+                    </h2>
+
+                    <p>
+                        Restore your protected media
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <form action="/decrypt"
+                  method="POST"
+                  enctype="multipart/form-data">
+
+
+                <label for="decrypt-file">
+                    Select Encrypted File
+                </label>
+
+
+                <div class="upload-box decrypt-upload">
+
+                    <div class="upload-icon">
+                        🔐
+                    </div>
+
+                    <h3>
+                        Select a SEIS encrypted file
+                    </h3>
+
+                    <p>
+                        Choose an encrypted media file
+                    </p>
+
+
+                    <input id="decrypt-file"
+                           type="file"
+                           name="file"
+                           accept=".enc"
+                           required>
+
+
+                    <small>
+                        Only .enc files are accepted
+                    </small>
+
+                </div>
+
+
+
+                <label for="decrypt-password">
+                    Decryption Password
+                </label>
+
+
+                <input id="decrypt-password"
+                       type="password"
+                       name="password"
+                       placeholder="Enter password"
+                       required>
+
+
+                <div class="password-info">
+
+                    🔐 Your password is never stored
+
+                </div>
+
+
+                <button type="submit"
+                        class="action-button decrypt-button">
+
+                    🔓 Decrypt File
+
+                </button>
+
+
+            </form>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- SECURITY FEATURES -->
+    <section class="features">
+
+
+        <div class="section-heading">
+
+            <h2>
+                🛡️ Security Features
+            </h2>
+
+            <p>
+                Multiple layers of protection keep your media secure.
+            </p>
+
+        </div>
+
+
+
+        <div class="feature-grid">
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    🔐
+                </div>
+
+                <div>
+
+                    <h3>
+                        AES-256-GCM
+                    </h3>
+
+                    <p>
+                        Strong authenticated encryption protects
+                        your media from unauthorized access.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    🔑
+                </div>
+
+                <div>
+
+                    <h3>
+                        PBKDF2
+                    </h3>
+
+                    <p>
+                        Passwords are converted into secure
+                        cryptographic keys using PBKDF2-HMAC-SHA256.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    🎲
+                </div>
+
+                <div>
+
+                    <h3>
+                        Random Salt &amp; Nonce
+                    </h3>
+
+                    <p>
+                        Every encryption operation uses fresh
+                        random cryptographic values.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    🛡️
+                </div>
+
+                <div>
+
+                    <h3>
+                        Tamper Detection
+                    </h3>
+
+                    <p>
+                        AES-GCM authentication rejects modified
+                        or corrupted encrypted files.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    #️⃣
+                </div>
+
+                <div>
+
+                    <h3>
+                        SHA-256 Integrity
+                    </h3>
+
+                    <p>
+                        SHA-256 fingerprints provide an additional
+                        file integrity and audit record.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    🎬
+                </div>
+
+                <div>
+
+                    <h3>
+                        Media Protection
+                    </h3>
+
+                    <p>
+                        Supports images and videos including
+                        JPG, PNG, MP4, AVI, MOV and MKV.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- SECURITY STATUS -->
+    <section class="security-status">
+
+
+        <div class="engine-status">
+
+            <span class="online-dot"></span>
+
+            <strong>
+                Encryption Engine Online
+            </strong>
+
+        </div>
+
+
+        <div class="security-tech">
+            AES-256-GCM
+        </div>
+
+
+        <div class="security-tech">
+            PBKDF2-HMAC-SHA256
+        </div>
+
+
+        <div class="security-tech">
+            SHA-256
+        </div>
+
+
+    </section>
+
+
+
+    <!-- FOOTER -->
+    <footer>
+
+
+        <div class="footer-logo">
+            🛡️ Secure Media Vault
+        </div>
+
+
+        <p>
+            Cybersecurity Encryption Project
+        </p>
+
+
+        <div class="footer-tech">
+
+            AES-256-GCM
+
+            <span>•</span>
+
+            PBKDF2-HMAC-SHA256
+
+            <span>•</span>
+
+            SHA-256
+
+            <span>•</span>
+
+            SQLite
+
+        </div>
+
+
+    </footer>
+
+
+</div>
+
+</body>
+
+</html>
+
