@@ -93,7 +93,7 @@ create_database()
 
 create_users_table()
 
-create_security_logs_table()
+create_default_admin()
 
 create_security_logs_table()
 
