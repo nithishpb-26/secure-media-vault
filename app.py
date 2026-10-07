@@ -13,8 +13,10 @@ from werkzeug.utils import secure_filename
 
 from database.users import (
     create_users_table,
+    create_user,
     verify_user,
-    change_password
+    change_password,
+    create_default_admin
 )
 
 from modules.encryption import (
@@ -90,6 +92,8 @@ os.makedirs(DECRYPTED_FOLDER, exist_ok=True)
 create_database()
 
 create_users_table()
+
+create_security_logs_table()
 
 create_security_logs_table()
 

@@ -134,3 +134,17 @@ def change_password(username, new_password):
     conn.close()
 
     return updated
+
+def create_default_admin():
+    username = os.environ.get("ADMIN_USERNAME")
+    password = os.environ.get("ADMIN_PASSWORD")
+
+    if not username or not password:
+        return False
+
+    create_users_table()
+
+    if create_user(username, password):
+        return True
+
+    return False
