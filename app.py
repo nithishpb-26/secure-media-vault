@@ -1055,6 +1055,18 @@ def decrypt():
 
     )
 
+@app.route("/check-admin")
+def check_admin():
+
+    username = os.environ.get("ADMIN_USERNAME")
+
+    return {
+        "admin_username_configured": bool(username),
+        "username_length": len(username) if username else 0
+    }
+
+
+
 
 # =========================================================
 # RUN APPLICATION
