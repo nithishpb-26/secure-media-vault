@@ -140,6 +140,7 @@ def create_default_admin():
     password = os.environ.get("ADMIN_PASSWORD")
 
     if not username or not password:
+        print("ADMIN_USERNAME or ADMIN_PASSWORD not configured.")
         return False
 
     create_users_table()
@@ -149,11 +150,10 @@ def create_default_admin():
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""
-        SELECT id
-        FROM users
-        WHERE username = ?
-    """, (username,))
+    cursor.execute(
+        "SELECT id FROM users WHERE username = ?",
+        (username,)
+    )
 
     existing_user = cursor.fetchone()
 
@@ -169,6 +169,8 @@ def create_default_admin():
             username
         ))
 
+        print(f"Admin user '{username}' password updated.")
+
     else:
 
         cursor.execute("""
@@ -180,6 +182,8 @@ def create_default_admin():
             password_hash,
             salt
         ))
+
+        print(f"Admin user '{username}' created.")
 
     conn.commit()
     conn.close()
