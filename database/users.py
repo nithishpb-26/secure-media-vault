@@ -134,8 +134,8 @@ def change_password(username, new_password):
     conn.close()
 
     return updated
-
 def create_default_admin():
+
     username = os.environ.get("ADMIN_USERNAME")
     password = os.environ.get("ADMIN_PASSWORD")
 
@@ -144,7 +144,44 @@ def create_default_admin():
 
     create_users_table()
 
-    if create_user(username, password):
-        return True
+    password_hash, salt = hash_password(password)
 
-    return False
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT id
+        FROM users
+        WHERE username = ?
+    """, (username,))
+
+    existing_user = cursor.fetchone()
+
+    if existing_user:
+
+        cursor.execute("""
+            UPDATE users
+            SET password_hash = ?, salt = ?
+            WHERE username = ?
+        """, (
+            password_hash,
+            salt,
+            username
+        ))
+
+    else:
+
+        cursor.execute("""
+            INSERT INTO users
+            (username, password_hash, salt)
+            VALUES (?, ?, ?)
+        """, (
+            username,
+            password_hash,
+            salt
+        ))
+
+    conn.commit()
+    conn.close()
+
+    return True
